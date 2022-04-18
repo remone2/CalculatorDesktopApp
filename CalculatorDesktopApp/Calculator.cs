@@ -2,12 +2,13 @@ namespace CalculatorDesktopApp
 {
     public partial class Calculator : Form
     {
-        List<int> ZeroToNine = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        List<int> TwoToNine = new List<int>() { 2, 3, 4, 5, 6, 7, 8, 9 };
         List<char> OperandSymbols = new List<char>() { '+', '-', '/', '*' };
         int EquationTotal;
         int rightNum;
         string previousOperand;
         bool operandPressed = false;
+        bool errorResult = false;
 
         public Calculator()
         {
@@ -332,9 +333,7 @@ namespace CalculatorDesktopApp
 
         private void Equals_Click(object sender, EventArgs e)
         {
-            WholeEquation.Text = "";
-
-            
+            WholeEquation.Text = "";          
 
             switch (previousOperand)
             {
@@ -378,11 +377,26 @@ namespace CalculatorDesktopApp
             EquationTotal = 0;
             WholeEquation.Text = "";
 
-            string binNum = InputNum.Text;
-            int num = Convert.ToInt32(binNum, 2);
+            foreach (int n in TwoToNine)
+            {
+                if (InputNum.Text.Contains(n.ToString()))
+                {
+                    errorResult = true;
+                }                 
+            }
 
-            WholeEquation.Visible = true;
-            WholeEquation.Text = num.ToString();
+            if (!errorResult)
+            {
+                string binNum = InputNum.Text;
+                int num = Convert.ToInt32(binNum, 2);
+                WholeEquation.Visible = true;
+                WholeEquation.Text = num.ToString();
+            }
+            else
+            {
+                WholeEquation.Visible = true;
+                WholeEquation.Text = "Error";
+            }
         }
 
         private void buttonBIN_Click(object sender, EventArgs e)
@@ -407,11 +421,13 @@ namespace CalculatorDesktopApp
 
         private void button10_Click(object sender, EventArgs e)
         {
-            WholeEquation.Text = "";
+            WholeEquation.Text = "Equation";
+            WholeEquation.Visible = false;
             OperandDisplay.Text = "";
             InputNum.Text = "";
             EquationTotal = 0;
             previousOperand = "";
+            errorResult = false;
         }      
     }
 }
